@@ -5,13 +5,27 @@ class LoansClient{
         this.baseUrl = "https://loanstreet-api.herokuapp.com/api/loans/"
     }
 
+    async getAllLoans(){
+        const res = await fetch(`${this.baseUrl}/${id}`)
+        const json = await res.json()
+        return json
+    }
+
     async getLoan(id) {
+        if (typeof id !== 'number') {
+            throw new TypeError("id must be a number")
+        } 
         const res = await fetch(`${this.baseUrl}/${id}`)
         const json = await res.json()
         return json
     }
 
     async updateAmount(id, newValue){
+        if (typeof id !== 'number') {
+            throw new TypeError("id must be a number")
+        } else if (typeof newValue !== 'number'){
+            throw new TypeError("newValue must be a number")
+        }
         const res = await fetch(`${this.baseUrl}/${id}`, {
             method:"PUT",
             body:JSON.stringify({amount: newValue}),
@@ -22,6 +36,11 @@ class LoansClient{
         return await res.json()
     }
     async updateInterestRate(id, newValue){
+        if (typeof id !== 'number') {
+            throw new TypeError("id must be a number")
+        } else if (typeof newValue !== 'number') {
+            throw new TypeError("newValue must be a number")
+        }
         const res = await fetch(`${this.baseUrl}/${id}`, {
             method:"PUT",
             body:JSON.stringify({interest_rate: newValue}),
@@ -33,6 +52,11 @@ class LoansClient{
     }
 
     async updateLoanLength(id, newValue){
+        if (typeof id !== 'number') {
+            throw new TypeError("id must be a number")
+        } else if (typeof newValue !== 'number') {
+            throw new TypeError("newValue must be a number")
+        }
         const res = await fetch(`${this.baseUrl}/${id}`, {
             method:"PUT",
             body:JSON.stringify({loan_length: newValue}),
@@ -44,6 +68,11 @@ class LoansClient{
     }
 
     async updateMonthlyPayment(id, newValue){
+        if (typeof id !== 'number') {
+            throw new TypeError("id must be a number")
+        } else if (typeof newValue !== 'number') {
+            throw new TypeError("newValue must be a number")
+        }
         const res = await fetch(`${this.baseUrl}/${id}`, {
             method:"PUT",
             body:JSON.stringify({monthly_payment: newValue}),
@@ -53,15 +82,15 @@ class LoansClient{
         })
         return await res.json()
     }
+
+    async deleteLoan(id) {
+        if(typeof id !== 'number'){
+            throw new TypeError("id must be a number")
+        }
+        const res = await fetch(`${this.baseUrl}/${id}`, {
+            method:"DELETE"
+        })
+    }
 }
 
 const client = new LoansClient()
-
-const test = client.getLoan(2)
-
-const test2 = client.updateAmount(1, 1003)
-const test3 = client.updateInterestRate(1, 1003)
-
-test2
-
-test
