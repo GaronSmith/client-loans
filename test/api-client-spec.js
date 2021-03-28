@@ -46,3 +46,27 @@ describe("LoansClient.getLoan", function() {
         expect(result.id).to.eql(2)
     })
 })
+
+describe("LoansClient.createLoan", function() {
+    it("should create a new loan", async function () {
+        const test = new LoansClient()
+        const newLoan = await test.createLoan(1000, 1.5, 50, 30)
+
+        expect(newLoan.loan.amount).to.eql(1000)
+        expect(newLoan.loan.loan_length).to.eql(30)
+        expect(newLoan.loan.monthly_payment).to.eql(50)
+        expect(newLoan.loan.interest_rate).to.eql(1.5)
+        expect(newLoan.message).to.eql("Loan Created")
+        await test.deleteLoan(newLoan.loan.id)
+    })
+})
+
+describe("LoansClient.updateAmount", function(){
+    it("should update the amount of a specified loan", async function() {
+        const test = new LoansClient()
+        const newLoan = await test.createLoan(1000, 1.5, 50, 30)
+        const updateAmount = await test.updateAmount(newLoan.loan.id, 1050)
+        expect(updateAmount.loan.amount).to.eql(1050)
+        await test.deleteLoan(updateAmount.loan.id)
+    })
+})

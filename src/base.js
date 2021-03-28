@@ -91,6 +91,36 @@ class LoansClient{
             method:"DELETE"
         })
     }
+
+    async createLoan(amount, interestRate, monthlyPayment, loanLength){
+        if (typeof amount !== 'number') {
+            throw new TypeError("amount must be a number")
+        } else if (typeof interestRate !== 'number') {
+            throw new TypeError("interestRate must be a number")
+        } else if (typeof monthlyPayment !== 'number') {
+            throw new TypeError("monthlyPayment must be a number")
+        } else if (typeof loanLength !== 'number') {
+            throw new TypeError("loanLength must be a number")
+        }
+        
+        const body = {
+            "amount": amount,
+            "interest_rate": interestRate,
+            "loan_length": loanLength,
+            "monthly_payment": monthlyPayment
+        }
+       
+        const res = await fetch(`${this.baseUrl}`, {
+            method:"POST",
+            body: JSON.stringify(body),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+
+        return await res.json()
+    }
 }
+const test = new LoansClient()
 
 module.exports = LoansClient
