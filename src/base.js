@@ -121,6 +121,5 @@ class LoansClient{
         return await res.json()
     }
 }
-const test = new LoansClient()
 
 module.exports = LoansClient
