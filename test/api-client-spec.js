@@ -104,7 +104,7 @@ describe("LoansClient.updateMonthlyPayment", function(){
 describe("LoansClient.deleteLoan", function(){
     it("should update the amount of a specified loan", async function() {
         const test = new LoansClient()
-        const newLoan = await test.createLoan(1000, 1.5, 50, 30)
+        const newLoan = await test.createLoan(ammount=1000, interestRate=1.5, monthlyPayment=50, loanLength=30)
         await test.deleteLoan(newLoan.loan.id)
         const res = await test.getLoan(newLoan.loan.id)
         expect(res.message).to.eql("Loan not found")

@@ -14,7 +14,9 @@ class LoansClient{
     async getLoan(id) {
         if (typeof id !== 'number') {
             throw new TypeError("id must be a number")
-        } 
+        } else if( id <=0 ){
+            throw new RangeError("id must be larger than 0")
+        }
         const res = await fetch(`${this.baseUrl}/${id}`)
         const json = await res.json()
         return json
@@ -25,6 +27,10 @@ class LoansClient{
             throw new TypeError("id must be a number")
         } else if (typeof newValue !== 'number'){
             throw new TypeError("newValue must be a number")
+        } else if (id <= 0) {
+            throw new RangeError("id must be larger than 0")
+        } else if (newValue <= 0) {
+            throw new RangeError("newValue must be larger than 0")
         }
         const res = await fetch(`${this.baseUrl}/${id}`, {
             method:"PUT",
@@ -40,6 +46,10 @@ class LoansClient{
             throw new TypeError("id must be a number")
         } else if (typeof newValue !== 'number') {
             throw new TypeError("newValue must be a number")
+        } else if (id <= 0) {
+            throw new RangeError("id must be larger than 0")
+        } else if (newValue <= 0) {
+            throw new RangeError("newValue must be larger than 0")
         }
         const res = await fetch(`${this.baseUrl}/${id}`, {
             method:"PUT",
@@ -56,6 +66,10 @@ class LoansClient{
             throw new TypeError("id must be a number")
         } else if (typeof newValue !== 'number') {
             throw new TypeError("newValue must be a number")
+        } else if (id <= 0) {
+            throw new RangeError("id must be larger than 0")
+        } else if (newValue <= 0) {
+            throw new RangeError("newValue must be larger than 0")
         }
         const res = await fetch(`${this.baseUrl}/${id}`, {
             method:"PUT",
@@ -72,6 +86,10 @@ class LoansClient{
             throw new TypeError("id must be a number")
         } else if (typeof newValue !== 'number') {
             throw new TypeError("newValue must be a number")
+        } else if (id <= 0) {
+            throw new RangeError("id must be larger than 0")
+        } else if (newValue <= 0) {
+            throw new RangeError("newValue must be larger than 0")
         }
         const res = await fetch(`${this.baseUrl}/${id}`, {
             method:"PUT",
@@ -86,6 +104,8 @@ class LoansClient{
     async deleteLoan(id) {
         if(typeof id !== 'number'){
             throw new TypeError("id must be a number")
+        } else if (id <= 0) {
+            throw new RangeError("id must be larger than 0")
         }
         const res = await fetch(`${this.baseUrl}/${id}`, {
             method:"DELETE"
