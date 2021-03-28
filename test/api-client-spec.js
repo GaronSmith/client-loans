@@ -45,6 +45,11 @@ describe("LoansClient.getLoan", function() {
         const result = await test.getLoan(2)
         expect(result.id).to.eql(2)
     })
+    it("should not return a none existent loan", async function () {
+        const test = new LoansClient()
+        const result = await test.getLoan(10000)
+        expect(result.message).to.eql("Loan not found")
+    })
 })
 
 describe("LoansClient.createLoan", function() {
