@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/GaronSmith/client-loans#readme",
   "dependencies": {
+    "chai": "^4.3.4",
+    "mocha": "^8.3.2",
     "node-fetch": "^2.6.1"
   }
 }

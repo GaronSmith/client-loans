@@ -6,7 +6,7 @@ class LoansClient{
     }
 
     async getAllLoans(){
-        const res = await fetch(`${this.baseUrl}/${id}`)
+        const res = await fetch(`${this.baseUrl}`)
         const json = await res.json()
         return json
     }
@@ -94,3 +94,6 @@ class LoansClient{
 }
 
 const client = new LoansClient()
+
+const test = client.getLoan(1)
+test //?
