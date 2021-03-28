@@ -93,7 +93,4 @@ class LoansClient{
     }
 }
 
-const client = new LoansClient()
-
-const test = client.getLoan(1)
-test //?
+module.exports = LoansClient
