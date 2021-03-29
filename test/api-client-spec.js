@@ -48,7 +48,7 @@ describe("LoansClient.getLoan", function() {
     it("should not return a none existent loan", async function () {
         const test = new LoansClient()
         const result = await test.getLoan(10000)
-        expect(result.message).to.eql("Loan not found")
+        expect(result.message).to.eql('Loan Not Found')
     })
 })
 
@@ -125,6 +125,15 @@ describe("LoansClient.deleteLoan", function(){
         const newLoan = await test.createLoan(ammount=1000, interestRate=1.5, monthlyPayment=50, loanLength=30)
         await test.deleteLoan(newLoan.loan.id)
         const res = await test.getLoan(newLoan.loan.id)
-        expect(res.message).to.eql("Loan not found")
+        expect(res.message).to.eql('Loan Not Found')
+    })
+})
+
+describe("404 response", function() {
+    it("should return a 404 message", async function(){
+        const test = new LoansClient()
+        test._baseUrl = "https://loanstreet-api.herokuapp.com/api/"
+        const loan = await test.getLoan(2)
+        expect(loan.message).to.eql("Resource not found")
     })
 })
