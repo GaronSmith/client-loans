@@ -7,7 +7,7 @@ class LoansClient{
 
     async getAllLoans(){
         const res = await this._callApi(this.baseUrl, null, 'GET')
-        return json
+        return res
     }
 
     async getLoan(id) {
@@ -19,6 +19,7 @@ class LoansClient{
 
     async updateLoan(id, amount=null, interestRate=null, monthlyPayment=null, loanLength=null){
         this._checkId(id)
+        this._checkTypesNull(amount, interestRate, monthlyPayment, loanLength)
         const body = this._createBody(amount, interestRate, loanLength, monthlyPayment)
         const url = `${this.baseUrl}/${id}`
         const res = await this._callApi(url, body, 'PUT')
@@ -47,7 +48,6 @@ class LoansClient{
         }
         
         if (verb === "PUT" || verb === "POST") {
-            
             const res = await fetch(url, {
                 method: verb,
                 body: JSON.stringify(body),
@@ -91,6 +91,18 @@ class LoansClient{
         } else if (typeof monthlyPayment !== 'number') {
             throw new TypeError("monthlyPayment must be a number")
         } else if (typeof loanLength !== 'number') {
+            throw new TypeError("loanLength must be a number")
+        }
+    }
+
+    _checkTypesNull(){
+        if (typeof amount !== 'number' || amount === null) {
+            throw new TypeError("amount must be a number")
+        } else if (typeof interestRate !== 'number' || interestRate === null) {
+            throw new TypeError("interestRate must be a number")
+        } else if (typeof monthlyPayment !== 'number' || monthlyPayment === null) {
+            throw new TypeError("monthlyPayment must be a number")
+        } else if (typeof loanLength !== 'number' || loanLength === null) {
             throw new TypeError("loanLength must be a number")
         }
     }
