@@ -2,17 +2,17 @@ const fetch = require("node-fetch")
 
 class LoansClient{
     constructor (){
-        this.baseUrl = "https://loanstreet-api.herokuapp.com/api/loans/"
+        this._baseUrl = "https://loanstreet-api.herokuapp.com/api/loans/"
     }
 
     async getAllLoans(){
-        const res = await this._callApi(this.baseUrl, null, 'GET')
+        const res = await this._callApi(this._baseUrl, null, 'GET')
         return res
     }
 
     async getLoan(id) {
         this._checkId(id)
-        const url = `${this.baseUrl}/${id}`
+        const url = `${this._baseUrl}/${id}`
         const res = await this._callApi(url,null, "GET")
         return res
     }
@@ -21,14 +21,14 @@ class LoansClient{
         this._checkId(id)
         this._checkTypesNull(amount, interestRate, monthlyPayment, loanLength)
         const body = this._createBody(amount, interestRate, loanLength, monthlyPayment)
-        const url = `${this.baseUrl}/${id}`
+        const url = `${this._baseUrl}/${id}`
         const res = await this._callApi(url, body, 'PUT')
         return res 
     }
 
     async deleteLoan(id) {
         this._checkId(id)
-        const url = `${this.baseUrl}/${id}`
+        const url = `${this._baseUrl}/${id}`
         const res = await this._callApi(url, null, "DELETE")
         return res 
     }
@@ -36,9 +36,8 @@ class LoansClient{
     async createLoan(amount, interestRate, monthlyPayment, loanLength){
         this._checkTypes(amount, interestRate, monthlyPayment, loanLength)
         const body = this._createBody(amount, interestRate, loanLength, monthlyPayment)
-        const url = this.baseUrl
+        const url = this._baseUrl
         const res = await this._callApi(url, body, "POST")
-
         return res
     }
     async _callApi(url, body, verb) {

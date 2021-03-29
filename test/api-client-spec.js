@@ -7,11 +7,11 @@ const LoansClient = require("../src/base")
 describe("LoansClient", function() {
     it("should have a base url property", function(){
         const test = new LoansClient()
-        expect(test).to.have.property("baseUrl")
+        expect(test).to.have.property("_baseUrl")
     })
     it("should have a baseUrl = https://loanstreet-api.herokuapp.com/api/loans/", function(){
         const test = new LoansClient()
-        expect(test.baseUrl).to.eql("https://loanstreet-api.herokuapp.com/api/loans/")
+        expect(test._baseUrl).to.eql("https://loanstreet-api.herokuapp.com/api/loans/")
     })
 })
 
