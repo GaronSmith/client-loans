@@ -66,42 +66,55 @@ describe("LoansClient.createLoan", function() {
     })
 })
 
-describe("LoansClient.updateAmount", function(){
-    it("should update the amount of a specified loan", async function() {
+describe("LoansClient.updateLoan", function(){
+    it("should update the all fields of a specified loan", async function() {
         const test = new LoansClient()
         const newLoan = await test.createLoan(1000, 1.5, 50, 30)
-        const updateAmount = await test.updateAmount(newLoan.loan.id, 1050)
-        expect(updateAmount.loan.amount).to.eql(1050)
-        await test.deleteLoan(updateAmount.loan.id)
-    })
-})
-
-describe("LoansClient.updateInterestRate", function(){
-    it("should update the amount of a specified loan", async function() {
-        const test = new LoansClient()
-        const newLoan = await test.createLoan(1000, 1.5, 50, 30)
-        const updateInterestRate = await test.updateInterestRate(newLoan.loan.id, 2)
-        expect(updateInterestRate.loan.interest_rate).to.eql(2)
-        await test.deleteLoan(updateInterestRate.loan.id)
-    })
-})
-
-describe("LoansClient.updateLoanLength", function(){
-    it("should update the amount of a specified loan", async function() {
-        const test = new LoansClient()
-        const newLoan = await test.createLoan(1000, 1.5, 50, 30)
-        const updateLoanLength = await test.updateLoanLength(newLoan.loan.id, 35)
-        expect(updateLoanLength.loan.loan_length).to.eql(35)
-        await test.deleteLoan(updateLoanLength.loan.id)
-    })
-})
-
-describe("LoansClient.updateMonthlyPayment", function(){
-    it("should update the amount of a specified loan", async function() {
-        const test = new LoansClient()
-        const newLoan = await test.createLoan(1000, 1.5, 50, 30)
-        const updateMonthlyPayment = await test.updateMonthlyPayment(newLoan.loan.id, 55)
+        const updateMonthlyPayment = await test.updateLoan(newLoan.loan.id, 1050, 2, 55, 30)
         expect(updateMonthlyPayment.loan.monthly_payment).to.eql(55)
+        expect(updateMonthlyPayment.loan.amount).to.eql(1050)
+        expect(updateMonthlyPayment.loan.interest_rate).to.eql(2)
+        expect(updateMonthlyPayment.loan.loan_length).to.eql(30)
+        await test.deleteLoan(updateMonthlyPayment.loan.id)
+    })
+    it("should update only loan_length field of a specified loan", async function() {
+        const test = new LoansClient()
+        const newLoan = await test.createLoan(1000, 1.5, 50, 30)
+        const updateMonthlyPayment = await test.updateLoan(newLoan.loan.id, null, null, null, 25)
+        expect(updateMonthlyPayment.loan.monthly_payment).to.eql(50)
+        expect(updateMonthlyPayment.loan.amount).to.eql(1000)
+        expect(updateMonthlyPayment.loan.interest_rate).to.eql(1.5)
+        expect(updateMonthlyPayment.loan.loan_length).to.eql(25)
+        await test.deleteLoan(updateMonthlyPayment.loan.id)
+    })
+    it("should update only monthly_payment field of a specified loan", async function() {
+        const test = new LoansClient()
+        const newLoan = await test.createLoan(1000, 1.5, 50, 30)
+        const updateMonthlyPayment = await test.updateLoan(newLoan.loan.id, null, null, 60, null)
+        expect(updateMonthlyPayment.loan.monthly_payment).to.eql(60)
+        expect(updateMonthlyPayment.loan.amount).to.eql(1000)
+        expect(updateMonthlyPayment.loan.interest_rate).to.eql(1.5)
+        expect(updateMonthlyPayment.loan.loan_length).to.eql(30)
+        await test.deleteLoan(updateMonthlyPayment.loan.id)
+    })
+    it("should update only amount field of a specified loan", async function() {
+        const test = new LoansClient()
+        const newLoan = await test.createLoan(1000, 1.5, 50, 30)
+        const updateMonthlyPayment = await test.updateLoan(newLoan.loan.id, 1050)
+        expect(updateMonthlyPayment.loan.monthly_payment).to.eql(50)
+        expect(updateMonthlyPayment.loan.amount).to.eql(1050)
+        expect(updateMonthlyPayment.loan.interest_rate).to.eql(1.5)
+        expect(updateMonthlyPayment.loan.loan_length).to.eql(30)
+        await test.deleteLoan(updateMonthlyPayment.loan.id)
+    })
+    it("should update only interest_rate field of a specified loan", async function() {
+        const test = new LoansClient()
+        const newLoan = await test.createLoan(1000, 1.5, 50, 30)
+        const updateMonthlyPayment = await test.updateLoan(newLoan.loan.id, null, 2)
+        expect(updateMonthlyPayment.loan.monthly_payment).to.eql(50)
+        expect(updateMonthlyPayment.loan.amount).to.eql(1000)
+        expect(updateMonthlyPayment.loan.interest_rate).to.eql(2)
+        expect(updateMonthlyPayment.loan.loan_length).to.eql(30)
         await test.deleteLoan(updateMonthlyPayment.loan.id)
     })
 })

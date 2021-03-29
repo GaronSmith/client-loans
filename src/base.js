@@ -6,124 +6,34 @@ class LoansClient{
     }
 
     async getAllLoans(){
-        const res = await fetch(`${this.baseUrl}`)
-        const json = await res.json()
+        const res = await this._callApi(this.baseUrl, null, 'GET')
         return json
     }
 
     async getLoan(id) {
-        if (typeof id !== 'number') {
-            throw new TypeError("id must be a number")
-        } else if( id <=0 ){
-            throw new RangeError("id must be larger than 0")
-        }
-        const res = await fetch(`${this.baseUrl}/${id}`)
-        const json = await res.json()
-        return json
+        this._checkId(id)
+        const url = `${this.baseUrl}/${id}`
+        const res = await this._callApi(url,null, "GET")
+        return res
     }
 
-    async updateAmount(id, newValue){
-        if (typeof id !== 'number') {
-            throw new TypeError("id must be a number")
-        } else if (typeof newValue !== 'number'){
-            throw new TypeError("newValue must be a number")
-        } else if (id <= 0) {
-            throw new RangeError("id must be larger than 0")
-        } else if (newValue <= 0) {
-            throw new RangeError("newValue must be larger than 0")
-        }
-        const res = await fetch(`${this.baseUrl}/${id}`, {
-            method:"PUT",
-            body:JSON.stringify({amount: newValue}),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-        return await res.json()
-    }
-    async updateInterestRate(id, newValue){
-        if (typeof id !== 'number') {
-            throw new TypeError("id must be a number")
-        } else if (typeof newValue !== 'number') {
-            throw new TypeError("newValue must be a number")
-        } else if (id <= 0) {
-            throw new RangeError("id must be larger than 0")
-        } else if (newValue <= 0) {
-            throw new RangeError("newValue must be larger than 0")
-        }
-        const res = await fetch(`${this.baseUrl}/${id}`, {
-            method:"PUT",
-            body:JSON.stringify({interest_rate: newValue}),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-        return await res.json()
-    }
-
-    async updateLoanLength(id, newValue){
-        if (typeof id !== 'number') {
-            throw new TypeError("id must be a number")
-        } else if (typeof newValue !== 'number') {
-            throw new TypeError("newValue must be a number")
-        } else if (id <= 0) {
-            throw new RangeError("id must be larger than 0")
-        } else if (newValue <= 0) {
-            throw new RangeError("newValue must be larger than 0")
-        }
-        const res = await fetch(`${this.baseUrl}/${id}`, {
-            method:"PUT",
-            body:JSON.stringify({loan_length: newValue}),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-        return await res.json()
-    }
-
-    async updateMonthlyPayment(id, newValue){
-        if (typeof id !== 'number') {
-            throw new TypeError("id must be a number")
-        } else if (typeof newValue !== 'number') {
-            throw new TypeError("newValue must be a number")
-        } else if (id <= 0) {
-            throw new RangeError("id must be larger than 0")
-        } else if (newValue <= 0) {
-            throw new RangeError("newValue must be larger than 0")
-        }
-        const res = await fetch(`${this.baseUrl}/${id}`, {
-            method:"PUT",
-            body:JSON.stringify({monthly_payment: newValue}),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-        return await res.json()
+    async updateLoan(id, amount=null, interestRate=null, monthlyPayment=null, loanLength=null){
+        this._checkId(id)
+        const body = this._createBody(amount, interestRate, loanLength, monthlyPayment)
+        const url = `${this.baseUrl}/${id}`
+        const res = await this._callApi(url, body, 'PUT')
+        return res 
     }
 
     async deleteLoan(id) {
-        if(typeof id !== 'number'){
-            throw new TypeError("id must be a number")
-        } else if (id <= 0) {
-            throw new RangeError("id must be larger than 0")
-        }
-
+        this._checkId(id)
         const url = `${this.baseUrl}/${id}`
         const res = await this._callApi(url, null, "DELETE")
         return res 
     }
 
     async createLoan(amount, interestRate, monthlyPayment, loanLength){
-        if (typeof amount !== 'number') {
-            throw new TypeError("amount must be a number")
-        } else if (typeof interestRate !== 'number') {
-            throw new TypeError("interestRate must be a number")
-        } else if (typeof monthlyPayment !== 'number') {
-            throw new TypeError("monthlyPayment must be a number")
-        } else if (typeof loanLength !== 'number') {
-            throw new TypeError("loanLength must be a number")
-        }
-        
+        this._checkTypes(amount, interestRate, monthlyPayment, loanLength)
         const body = this._createBody(amount, interestRate, loanLength, monthlyPayment)
         const url = this.baseUrl
         const res = await this._callApi(url, body, "POST")
@@ -135,9 +45,9 @@ class LoansClient{
         if (!acceptedVerbs.has(verb)) {
             throw new SyntaxError("_callApi accepts ['PUT', 'POST','DELETE', 'GET'] as verbs")
         }
-
-        console.log(verb)
-        if (verb !== "DELETE") {
+        
+        if (verb === "PUT" || verb === "POST") {
+            
             const res = await fetch(url, {
                 method: verb,
                 body: JSON.stringify(body),
@@ -145,26 +55,52 @@ class LoansClient{
                     "Content-Type": "application/json"
                 }
             })
-
             return await res.json()
 
         } else {
             const res = await fetch(url, {
-                method: "DELETE"
+                method: verb
             })
             const json = await res.json()
-            return json.message
+            return json
         }
     }
 
     _createBody(amount, interestRate, loanLength, monthlyPayment) {
-        const body = {
-            amount: amount,
-            interest_rate: interestRate,
-            loan_length: loanLength,
-            monthly_payment: monthlyPayment,
+        const body = {}
+        if(amount){
+            body["amount"] = amount
+        } 
+        if(interestRate) {
+            body["interest_rate"] = interestRate
+        }
+        if(loanLength){
+            body["loan_length"] = loanLength
+        }
+        if(monthlyPayment){
+            body["monthly_payment"] = monthlyPayment
         }
         return body
+    }
+
+    _checkTypes(amount, interestRate, loanLength, monthlyPayment){
+        if (typeof amount !== 'number') {
+            throw new TypeError("amount must be a number")
+        } else if (typeof interestRate !== 'number') {
+            throw new TypeError("interestRate must be a number")
+        } else if (typeof monthlyPayment !== 'number') {
+            throw new TypeError("monthlyPayment must be a number")
+        } else if (typeof loanLength !== 'number') {
+            throw new TypeError("loanLength must be a number")
+        }
+    }
+
+    _checkId(id){
+        if (typeof id !== 'number') {
+            throw new TypeError("id must be a number")
+        } else if (id <= 0) {
+            throw new RangeError("id must be larger than 0")
+        }
     }
 }
 
