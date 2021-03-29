@@ -123,22 +123,46 @@ class LoansClient{
             throw new TypeError("loanLength must be a number")
         }
         
-        const body = {
-            "amount": amount,
-            "interest_rate": interestRate,
-            "loan_length": loanLength,
-            "monthly_payment": monthlyPayment
-        }
-       
-        const res = await fetch(`${this.baseUrl}`, {
-            method:"POST",
-            body: JSON.stringify(body),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
+        const body = this._createBody(amount, interestRate, monthlyPayment, loanLength)
 
-        return await res.json()
+        const url = this.baseUrl
+       
+        const res = await this._callApi(url, body, "POST")
+
+        return res
+    }
+
+    async _callApi(url, body, verb){
+        const acceptedVerbs = new Set(["PUT", "POST","DELETE", "GET"])
+        if (!acceptedVerbs.has(verb)){
+            throw new SyntaxError("_callApi accepts ['PUT', 'POST','DELETE', 'GET'] as verbs")
+        } 
+        if(verb !== "DELETE"){
+            const res = await fetch(url, {
+                method: verb,
+                body: JSON.stringify(body),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+
+            return await res.json()
+
+        } else {
+            const res = await fetch(`${this.baseUrl}/${id}`, {
+                method: "DELETE"
+            })
+        }
+    }
+
+    _createBody(amount, interestRate, loanLength, monthlyPayment){
+        const body = {
+            amount,
+            interestRate,
+            loanLength,
+            monthlyPaymen
+        }
+        return body
     }
 }
 
