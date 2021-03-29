@@ -95,14 +95,14 @@ class LoansClient{
         }
     }
 
-    _checkTypesNull(){
-        if (typeof amount !== 'number' || amount === null) {
+    _checkTypesNull(amount, interestRate, loanLength, monthlyPayment){
+        if (typeof amount !== 'number' && amount !== null) {
             throw new TypeError("amount must be a number")
-        } else if (typeof interestRate !== 'number' || interestRate === null) {
+        } else if (typeof interestRate !== 'number' && interestRate !== null) {
             throw new TypeError("interestRate must be a number")
-        } else if (typeof monthlyPayment !== 'number' || monthlyPayment === null) {
+        } else if (typeof monthlyPayment !== 'number' && monthlyPayment !== null) {
             throw new TypeError("monthlyPayment must be a number")
-        } else if (typeof loanLength !== 'number' || loanLength === null) {
+        } else if (typeof loanLength !== 'number' && loanLength !== null) {
             throw new TypeError("loanLength must be a number")
         }
     }
