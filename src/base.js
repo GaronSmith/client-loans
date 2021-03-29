@@ -107,9 +107,10 @@ class LoansClient{
         } else if (id <= 0) {
             throw new RangeError("id must be larger than 0")
         }
-        const res = await fetch(`${this.baseUrl}/${id}`, {
-            method:"DELETE"
-        })
+
+        const url = `${this.baseUrl}/${id}`
+        const res = await this._callApi(url, null, "DELETE")
+        return res 
     }
 
     async createLoan(amount, interestRate, monthlyPayment, loanLength){
@@ -123,21 +124,20 @@ class LoansClient{
             throw new TypeError("loanLength must be a number")
         }
         
-        const body = this._createBody(amount, interestRate, monthlyPayment, loanLength)
-
+        const body = this._createBody(amount, interestRate, loanLength, monthlyPayment)
         const url = this.baseUrl
-       
         const res = await this._callApi(url, body, "POST")
 
         return res
     }
-
-    async _callApi(url, body, verb){
-        const acceptedVerbs = new Set(["PUT", "POST","DELETE", "GET"])
-        if (!acceptedVerbs.has(verb)){
+    async _callApi(url, body, verb) {
+        const acceptedVerbs = new Set(["PUT", "POST", "DELETE", "GET"])
+        if (!acceptedVerbs.has(verb)) {
             throw new SyntaxError("_callApi accepts ['PUT', 'POST','DELETE', 'GET'] as verbs")
-        } 
-        if(verb !== "DELETE"){
+        }
+
+        console.log(verb)
+        if (verb !== "DELETE") {
             const res = await fetch(url, {
                 method: verb,
                 body: JSON.stringify(body),
@@ -149,18 +149,20 @@ class LoansClient{
             return await res.json()
 
         } else {
-            const res = await fetch(`${this.baseUrl}/${id}`, {
+            const res = await fetch(url, {
                 method: "DELETE"
             })
+            const json = await res.json()
+            return json.message
         }
     }
 
-    _createBody(amount, interestRate, loanLength, monthlyPayment){
+    _createBody(amount, interestRate, loanLength, monthlyPayment) {
         const body = {
-            amount,
-            interestRate,
-            loanLength,
-            monthlyPaymen
+            amount: amount,
+            interest_rate: interestRate,
+            loan_length: loanLength,
+            monthly_payment: monthlyPayment,
         }
         return body
     }
