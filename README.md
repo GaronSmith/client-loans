@@ -9,7 +9,11 @@ const client = new LoansClient()
 
 const newLoan = client.createLoan(ammount=1000, interestRate=1.5, monthlyPayment=50, loanLength=30)
 
-const updatedLoan = client.updateAmount(newloan.loan.id, 1050) 
+const updatedAmount = client.updateLoan(newloan.loan.id, 1050) 
+const updatedInterestRate = client.updateLoan(newloan.loan.id, null, 2) 
+const updatedMonthlyPayment = client.updateLoan(newloan.loan.id, null, null, 60) 
+const updatedloanLength= client.updateLoan(newloan.loan.id, null, null, null, 20) 
+const updatedAllFields= client.updateLoan(newloan.loan.id, 1050, 2, 60, 20) 
 ```
 
 ## Documentation 
@@ -48,36 +52,13 @@ const updatedLoan = client.updateAmount(newloan.loan.id, 1050)
 
 <br/>
 
-### updateAmount
+### updateLoan
 
 | Argument       |   Type        | required  |
 | -------------  |:-------------:| -----:    |
-| id             | int           | Yes       |
-| newValue       | float         | Yes       |
+| id             | int           | no        |
+| amount         | float         | no        |
+| interestRate   | float         | no        |
+| monthlyPayment | float         | no        |
+| loanLength     | int           | no        |
 
-<br/>
-
-### updateInterestRate
-
-| Argument       |   Type        | required  |
-| -------------  |:-------------:| -----:    |
-| id             | int           | Yes       |
-| newValue       | float         | Yes       |
-
-<br/>
-
-### updateMonthlyPayment
-
-| Argument       |   Type        | required  |
-| -------------  |:-------------:| -----:    |
-| id             | int           | Yes       |
-| newValue       | float         | Yes       |
-
-<br/>
-
-### updateLoanLength
-
-| Argument       |   Type        | required  |
-| -------------  |:-------------:| -----:    |
-| id             | int           | Yes       |
-| newValue       | int           | Yes       |
