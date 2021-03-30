@@ -138,7 +138,7 @@ describe("404 response", function() {
     })
 })
 
-describe("Check for incorrect request values", function() {
+describe("Check for incorrect request values POST", function() {
     it("should return incorrect data type when not a number", async function() {
         const body = {
             "amount": "102",
@@ -159,8 +159,8 @@ describe("Check for incorrect request values", function() {
     })
 })
 
-describe("Check for incorrect request keys", function() {
-    it("should return incorrect data type when not a number", async function() {
+describe("Check for incorrect request keys POST", function() {
+    it("should return incorrect key when wrong key sent in request", async function() {
         const body = {
             "amount": 102,
             "_rate": 2,
@@ -178,4 +178,46 @@ describe("Check for incorrect request keys", function() {
         const json = await res.json()
         expect(json.message).to.eql("JSON Format Error: KeyError('interest_rate')")
     })
+})
+
+describe("Check for incorrect request values PUT", function () {
+    it("should return incorrect data type when not a number", async function () {
+        const body = {
+            "amount": "102",
+            "interest_rate": 2,
+            "loan_length": 12,
+            "monthly_payment": 100
+        }
+
+        const res = await fetch("https://loanstreet-api.herokuapp.com/api/loans/2", {
+            method: "PUT",
+            body: JSON.stringify(body),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        const json = await res.json()
+        expect(json.message).to.eql("Loan amount must be a number")
+    })
+})
+
+describe("Check for incorrect request keys PUT", function () {
+    it("should return incorrect key when wrong key sent in request", async function () {
+        const body = {
+            "amount": 102,
+            "_rate": 2,
+            "loan_length": 12,
+            "monthly_payment": 100
+        }
+
+        const res = await fetch("https://loanstreet-api.herokuapp.com/api/loans/2", {
+            method: "PUT",
+            body: JSON.stringify(body),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        const json = await res.json()
+        expect(json.message).to.eql("Key: <_rate> is not valid")
+        })
 })
