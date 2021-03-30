@@ -1,6 +1,6 @@
 const chai = require("chai")
 const expect = chai.expect
-const assert = require("assert")
+const fetch = require("node-fetch")
 
 const LoansClient = require("../src/base")
 
@@ -135,5 +135,47 @@ describe("404 response", function() {
         test._baseUrl = "https://loanstreet-api.herokuapp.com/api/"
         const loan = await test.getLoan(2)
         expect(loan.message).to.eql("Resource not found")
+    })
+})
+
+describe("Check for incorrect request values", function() {
+    it("should return incorrect data type when not a number", async function() {
+        const body = {
+            "amount": "102",
+            "interest_rate": 2,
+            "loan_length": 12,
+            "monthly_payment": 100
+        }
+        
+        const res = await fetch("https://loanstreet-api.herokuapp.com/api/loans/", {
+            method: "POST",
+            body:JSON.stringify(body),
+            headers:{
+                "Content-Type": "application/json"
+            }
+        })
+        const json = await res.json()
+        expect(json.message).to.eql("Loan amount must be a number")
+    })
+})
+
+describe("Check for incorrect request keys", function() {
+    it("should return incorrect data type when not a number", async function() {
+        const body = {
+            "amount": 102,
+            "_rate": 2,
+            "loan_length": 12,
+            "monthly_payment": 100
+        }
+        
+        const res = await fetch("https://loanstreet-api.herokuapp.com/api/loans/", {
+            method: "POST",
+            body:JSON.stringify(body),
+            headers:{
+                "Content-Type": "application/json"
+            }
+        })
+        const json = await res.json()
+        expect(json.message).to.eql("JSON Format Error: KeyError('interest_rate')")
     })
 })
