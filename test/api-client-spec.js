@@ -176,7 +176,7 @@ describe("Check for incorrect request keys POST", function() {
             }
         })
         const json = await res.json()
-        expect(json.message).to.eql("JSON Format Error: KeyError('interest_rate')")
+        expect(json.message).to.eql("Key: <_rate> is not valid")
     })
 })
 
